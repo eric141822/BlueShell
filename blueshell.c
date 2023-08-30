@@ -18,17 +18,19 @@ int shell_exec(char **args);
 int shell_exit(char **args);
 int shell_help(char **args);
 int shell_hello(char **args);
+int shell_cflags(char **args);
 
 // number of custom commands
 int num_custom_cmds();
 
 // order must match custom_func
-char *custom_cmds[] = {"exit", "help", "hello"};
+char *custom_cmds[] = {"exit", "help", "hello", "cflags"};
 
 int (*custom_func[])(char **) = {
     shell_exit,
     shell_help,
     shell_hello,
+    shell_cflags,
 };
 
 int shell_exit(char **args)
@@ -56,6 +58,37 @@ int shell_hello(char **args)
     {
         printf("Hello, %s!\n", args[1]);
     }
+    return 1;
+}
+
+int shell_cflags(char **args)
+{
+    if (args[1] == NULL)
+    {
+        fprintf(stderr, "cflags: requires an argument\n");
+    }
+
+    else if (sizeof(args) / sizeof(char *) > 2)
+    {
+        fprintf(stderr, "cflags: too many arguments\n");
+    }
+    else
+    {
+        if (strcasecmp(args[1], "C") == 0)
+        {
+            printf("-Wall -Wextra -Wundef -Wshadow -Wpointer-arith -Wcast-align -pedantic -O3\n");
+        }
+        else if (strcasecmp(args[1], "C++") == 0 || strcasecmp(args[1], "CXX") == 0 || strcasecmp(args[1], "CPP") == 0)
+        {
+            printf("-Wall -pedantic -Wshadow -O3 -std=c++17\n");
+            printf("Add -g for debug symbols\n");
+        }
+        else
+        {
+            fprintf(stderr, "cflags: invalid argument\n");
+        }
+    }
+
     return 1;
 }
 
