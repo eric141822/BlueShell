@@ -1,12 +1,12 @@
 CC=gcc
-FLAGS=-Wall -Wundef -Wshadow -Wpointer-arith -Wcast-align \
+CCFLAGS=-Wall -Wundef -Wshadow -Wpointer-arith -Wcast-align \
 	-pedantic -O3
 EXECUTABLES=blueshell \
 
 all: $(EXECUTABLES)
 
-blueshell: blueshell.c
-	$(CC) $(FLAGS) -o $@ $^
+blueshell: cmds.c blueshell.c
+	$(CC) $(CCFLAGS) $^ -o $@ 
 
 .PHONY: clean all
 
