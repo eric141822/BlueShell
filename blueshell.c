@@ -4,6 +4,7 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 
 #define BUFFER_SIZE 64
 #define TOK_DELIM " \t\r\n\a"
@@ -19,18 +20,21 @@ int shell_exit(char **args);
 int shell_help(char **args);
 int shell_hello(char **args);
 int shell_cflags(char **args);
-
+int shell_mkdir(char **args);
+int shell_rmdir(char **args);
 // number of custom commands
 int num_custom_cmds();
 
 // order must match custom_func
-char *custom_cmds[] = {"exit", "help", "hello", "cflags"};
+char *custom_cmds[] = {"exit", "help", "hello", "cflags", "mkdir", "rmdir"};
 
 int (*custom_func[])(char **) = {
     shell_exit,
     shell_help,
     shell_hello,
     shell_cflags,
+    shell_mkdir,
+    shell_rmdir,
 };
 
 int shell_exit(char **args)
@@ -67,11 +71,6 @@ int shell_cflags(char **args)
     {
         fprintf(stderr, "cflags: requires an argument\n");
     }
-
-    else if (sizeof(args) / sizeof(char *) > 2)
-    {
-        fprintf(stderr, "cflags: too many arguments\n");
-    }
     else
     {
         if (strcasecmp(args[1], "C") == 0)
@@ -89,6 +88,47 @@ int shell_cflags(char **args)
         }
     }
 
+    return 1;
+}
+
+int shell_mkdir(char **args)
+{
+    if (args[1] == NULL)
+    {
+        fprintf(stderr, "mkdir: requires an argument\n");
+    }
+
+    struct stat st = {0};
+
+    if (stat(args[1], &st) == -1)
+    {
+        mkdir(args[1], 0700);
+    }
+    else
+    {
+        fprintf(stderr, "mkdir: directory already exists\n");
+    }
+
+    return 1;
+}
+
+int shell_rmdir(char **args)
+{
+    if (args[1] == NULL)
+    {
+        fprintf(stderr, "rmdir: requires an argument\n");
+    }
+
+    struct stat st = {0};
+
+    if (stat(args[1], &st) == -1)
+    {
+        fprintf(stderr, "rmdir: directory does not exist\n");
+    }
+    else
+    {
+        rmdir(args[1]);
+    }
     return 1;
 }
 

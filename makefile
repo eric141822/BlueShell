@@ -1,5 +1,5 @@
 CC=gcc
-FLAGS=-Wall -Wextra -Wundef -Wshadow -Wpointer-arith -Wcast-align \
+FLAGS=-Wall -Wundef -Wshadow -Wpointer-arith -Wcast-align \
 	-pedantic -O3
 EXECUTABLES=blueshell \
 
