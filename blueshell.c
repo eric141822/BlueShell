@@ -103,6 +103,10 @@ int shell_exec(char **args)
     {
         return shell_ls(args);
     }
+    else if (strcmp(args[0], "blueshell") == 0)
+    {
+        return shell_blue_shell();
+    }
 
     pid_t pid;
 

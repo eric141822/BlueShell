@@ -13,16 +13,54 @@
 
 char *custom_cmds[] = {"exit", "help", "hello", "cflags", "mkdir", "rmdir", "ls"};
 
+void clearScreen() {
+    printf("\033[H\033[J");
+}
+
+void printBlueShell(int state) {
+    clearScreen();
+    switch (state) {
+        case 0:
+            printf("\033[34m      ^      \033[0m\n");
+            printf("\033[34m     / \\     \033[0m\n");
+            printf("\033[34m <---------> \033[0m\n");
+            printf("\033[34m     \\ /     \033[0m\n");
+            printf("\033[34m      v      \033[0m\n");
+            break;
+        case 1:
+            printf("\033[34m <---------> \033[0m\n");
+            printf("\033[34m     / \\     \033[0m\n");
+            printf("\033[34m      ^      \033[0m\n");
+            printf("\033[34m     \\ /     \033[0m\n");
+            printf("\033[34m <---------> \033[0m\n");
+            break;
+        case 2:
+            printf("\033[34m      v      \033[0m\n");
+            printf("\033[34m     \\ /     \033[0m\n");
+            printf("\033[34m <---------> \033[0m\n");
+            printf("\033[34m     / \\     \033[0m\n");
+            printf("\033[34m      ^      \033[0m\n");
+            break;
+        case 3:
+            printf("\033[34m <---------> \033[0m\n");
+            printf("\033[34m     \\ /     \033[0m\n");
+            printf("\033[34m      v      \033[0m\n");
+            printf("\033[34m     / \\     \033[0m\n");
+            printf("\033[34m <---------> \033[0m\n");
+            break;
+    }
+}
+
 int num_custom_cmds()
 {
     return sizeof(custom_cmds) / sizeof(char *);
 }
 
-int shell_exit()
+int shell_exit(void)
 {
     return 0;
 }
-int shell_help()
+int shell_help(void)
 {
     printf("Welcome to Blueshell!\n");
     printf("Custom commands supported:\n");
@@ -166,7 +204,7 @@ int shell_ls(char **argv)
                 printf((fst.st_mode & S_IROTH) ? "r" : "-");
                 printf((fst.st_mode & S_IWOTH) ? "w" : "-");
                 printf((fst.st_mode & S_IXOTH) ? "x" : "-");
-                printf("\t%ld", fst.st_size);
+                printf("\t%lld", fst.st_size);
                 // remove \n from ctime.
                 char *tstr = ctime(&fst.st_ctime);
                 if (tstr[strlen(tstr) - 1] == '\n')
@@ -174,7 +212,7 @@ int shell_ls(char **argv)
                     tstr[strlen(tstr) - 1] = '\0';
                 }
                 printf("\t%s", tstr);
-                printf("\t%s\n", de->d_name);
+                printf((S_ISDIR(fst.st_mode)) ? "\t\033[34m%s\033[0m\n" : "\t%s\n", de->d_name);
             }
             else
             {
@@ -182,6 +220,19 @@ int shell_ls(char **argv)
             }
         }
         closedir(dr);
+    }
+
+    return 1;
+}
+
+
+int shell_blue_shell(void) {
+    int state = 0;
+
+    for (int i = 0; i < 50; i++) {
+        printBlueShell(state);
+        usleep(500000);  // Delay for 500ms
+        state = (state + 1) % 4;
     }
 
     return 1;
