@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <time.h>
 
 char *custom_cmds[] = {"exit", "help", "hello", "cflags", "mkdir", "rmdir", "ls"};
 
@@ -107,24 +108,24 @@ int shell_rmdir(char **argv)
     return 1;
 }
 
-int shell_ls(char **argv) {
+int shell_ls(char **argv)
+{
     // get opts.
     int opt;
-    int aflag = 0;
     int lflag = 0;
     int argc;
-    for (argc = 0; argv[argc] != NULL; argc++);
-    while ((opt = getopt(argc, argv, "al")) != -1) {
-        switch (opt) {
-            case 'a':
-                aflag = 1;
-                break;
-            case 'l':
-                lflag = 1;
-                break;
-            default:
-                fprintf(stderr, "ls: invalid option\n");
-                return 1;
+    for (argc = 0; argv[argc] != NULL; argc++)
+        ;
+    while ((opt = getopt(argc, argv, "l")) != -1)
+    {
+        switch (opt)
+        {
+        case 'l':
+            lflag = 1;
+            break;
+        default:
+            fprintf(stderr, "ls: invalid option\n");
+            return 1;
         }
     }
 
@@ -132,8 +133,9 @@ int shell_ls(char **argv) {
     // reset optind.
     optind = 1;
     struct stat st;
-    
-    if (stat(path, &st) == -1) {
+
+    if (stat(path, &st) == -1)
+    {
         fprintf(stderr, "ls: directory does not exist\n");
         return 1;
     }
@@ -141,16 +143,43 @@ int shell_ls(char **argv) {
     DIR *dr = opendir(path);
     struct dirent *de;
 
-    // if (dr) {
-    //     while ((de = readdir(dr)) != NULL) {
-    //         printf("%s\n", de->d_name);
-    //     }
-    //     closedir(dr);
-    // }
+    if (dr)
+    {
+        while ((de = readdir(dr)) != NULL)
+        {
+            if (lflag)
+            {
+                struct stat fst;
+                stat(de->d_name, &fst);
+                printf((S_ISDIR(fst.st_mode)) ? "d" : "-");
+                printf((fst.st_mode & S_IRUSR) ? "r" : "-");
+                printf((fst.st_mode & S_IWUSR) ? "w" : "-");
+                printf((fst.st_mode & S_IXUSR) ? "x" : "-");
+                printf((fst.st_mode & S_IRGRP) ? "r" : "-");
+                printf((fst.st_mode & S_IWGRP) ? "w" : "-");
+                printf((fst.st_mode & S_IXGRP) ? "x" : "-");
+                printf((fst.st_mode & S_IROTH) ? "r" : "-");
+                printf((fst.st_mode & S_IWOTH) ? "w" : "-");
+                printf((fst.st_mode & S_IXOTH) ? "x" : "-");
+                printf("\t%ld", fst.st_size);
+                char *tstr = ctime(&fst.st_ctime);
+                if (tstr[strlen(tstr) - 1] == '\n')
+                {
+                    tstr[strlen(tstr) - 1] = '\0';
+                }
+                printf("\t%s", tstr);
+                printf("\t%s\n", de->d_name);
+            }
+            else
+            {
+                printf("%s\n", de->d_name);
+            }
+        }
+        closedir(dr);
+    }
 
     return 1;
 }
-
 
 int num_custom_cmds()
 {
