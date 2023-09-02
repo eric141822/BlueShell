@@ -9,7 +9,7 @@ A simple practice/study, following the fantasic [guide](https://brennan.io/2015/
 - help
     - prints the list of commands available.
 - exit
-    - quits the shell, same as `ctrl+c`.
+    - quits the shell, same as `ctrl/cmd+c`.
 - hello *arg*
     - prints a hello message to *arg*.
 - cflags *arg*

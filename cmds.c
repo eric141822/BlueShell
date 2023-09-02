@@ -13,6 +13,11 @@
 
 char *custom_cmds[] = {"exit", "help", "hello", "cflags", "mkdir", "rmdir", "ls"};
 
+int num_custom_cmds()
+{
+    return sizeof(custom_cmds) / sizeof(char *);
+}
+
 int shell_exit()
 {
     return 0;
@@ -162,7 +167,7 @@ int shell_ls(char **argv)
                 printf((fst.st_mode & S_IWOTH) ? "w" : "-");
                 printf((fst.st_mode & S_IXOTH) ? "x" : "-");
                 printf("\t%ld", fst.st_size);
-                // remove \n from ctime str.
+                // remove \n from ctime.
                 char *tstr = ctime(&fst.st_ctime);
                 if (tstr[strlen(tstr) - 1] == '\n')
                 {
@@ -180,9 +185,4 @@ int shell_ls(char **argv)
     }
 
     return 1;
-}
-
-int num_custom_cmds()
-{
-    return sizeof(custom_cmds) / sizeof(char *);
 }
