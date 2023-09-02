@@ -19,3 +19,5 @@ A simple practice/study, following the fantasic [guide](https://brennan.io/2015/
     - creates a directory.
 - rmdir
     - removes a directory.
+- ls
+    - prints a list of files and folders in the specified path. Supports the -l flag.

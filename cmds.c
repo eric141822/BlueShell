@@ -162,6 +162,7 @@ int shell_ls(char **argv)
                 printf((fst.st_mode & S_IWOTH) ? "w" : "-");
                 printf((fst.st_mode & S_IXOTH) ? "x" : "-");
                 printf("\t%ld", fst.st_size);
+                // remove \n from ctime str.
                 char *tstr = ctime(&fst.st_ctime);
                 if (tstr[strlen(tstr) - 1] == '\n')
                 {
