@@ -3,12 +3,13 @@
 
 extern char *custom_cmds[];
 
-int shell_exit(char **args);
-int shell_help(char **args);
-int shell_hello(char **args);
-int shell_cflags(char **args);
-int shell_mkdir(char **args);
-int shell_rmdir(char **args);
+int shell_exit();
+int shell_help();
+int shell_hello(char **argv);
+int shell_cflags(char **argv);
+int shell_mkdir(char **argv);
+int shell_rmdir(char **argv);
+int shell_ls(char **argv);
 
 extern int (*custom_func[])(char **);
 

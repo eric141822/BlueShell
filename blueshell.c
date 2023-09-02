@@ -75,12 +75,33 @@ int shell_exec(char **args)
         return 1; // continue the loop in shell_loop.
     }
 
-    for (int i = 0; i < num_custom_cmds(); i++)
+    if (strcmp(args[0], "exit") == 0)
     {
-        if (strcmp(args[0], custom_cmds[i]) == 0)
-        {
-            return (*custom_func[i])(args);
-        }
+        return shell_exit();
+    }
+    else if (strcmp(args[0], "help") == 0)
+    {
+        return shell_help();
+    }
+    else if (strcmp(args[0], "hello") == 0)
+    {
+        return shell_hello(args);
+    }
+    else if (strcmp(args[0], "cflags") == 0)
+    {
+        return shell_cflags(args);
+    }
+    else if (strcmp(args[0], "mkdir") == 0)
+    {
+        return shell_mkdir(args);
+    }
+    else if (strcmp(args[0], "rmdir") == 0)
+    {
+        return shell_rmdir(args);
+    }
+    else if (strcmp(args[0], "ls") == 0)
+    {
+        return shell_ls(args);
     }
 
     pid_t pid;
@@ -93,6 +114,7 @@ int shell_exec(char **args)
         {
             perror("execvp error");
         }
+        exit(EXIT_SUCCESS);
     }
     else if (pid < 0)
     {
@@ -116,19 +138,17 @@ void shell_loop(void)
     printf("*** BLUESHELL ***\n");
     printf("*****************\n");
 
-    int status;
+    int status = 1;
 
-    do
+    while (status)
     {
         printf("> ");
         char *line = shell_line();
         char **args = shell_get_args(line);
         status = shell_exec(args);
-
         free(line);
         free(args);
-
-    } while (status);
+    }
 }
 
 int main(void)
