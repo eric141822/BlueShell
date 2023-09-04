@@ -5,7 +5,6 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
 #include "cmds.h"
 
 #define BUFFER_SIZE 64
@@ -107,6 +106,10 @@ int shell_exec(char **args)
     {
         return shell_blue_shell();
     }
+    else if (strcmp(args[0], "cd") == 0)
+    {
+        return shell_cd(args);
+    }
 
     pid_t pid;
 
@@ -146,6 +149,16 @@ void shell_loop(void)
 
     while (status)
     {
+        char cwd[1024];
+        if (getcwd(cwd, sizeof(cwd)) != NULL)
+        {
+            printf("%s", cwd);
+        }
+        else
+        {
+            perror("getcwd error");
+        }
+
         printf("> ");
         char *line = shell_line();
         char **args = shell_get_args(line);

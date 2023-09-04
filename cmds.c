@@ -11,7 +11,7 @@
 #include <dirent.h>
 #include <time.h>
 
-char *custom_cmds[] = {"exit", "help", "hello", "cflags", "mkdir", "rmdir", "ls"};
+char *custom_cmds[] = {"exit", "help", "hello", "cflags", "mkdir", "rmdir", "ls", "cd"};
 
 void clearScreen() {
     printf("\033[H\033[J");
@@ -54,6 +54,22 @@ void printBlueShell(int state) {
 int num_custom_cmds()
 {
     return sizeof(custom_cmds) / sizeof(char *);
+}
+
+int shell_cd(char **argv)
+{
+    if (argv[1] == NULL)
+    {
+        fprintf(stderr, "cd: requires an argument\n");
+    }
+    else
+    {
+        if (chdir(argv[1]) != 0)
+        {
+            fprintf(stderr, "cd: directory does not exist\n");
+        }
+    }
+    return 1;
 }
 
 int shell_exit(void)
@@ -204,7 +220,7 @@ int shell_ls(char **argv)
                 printf((fst.st_mode & S_IROTH) ? "r" : "-");
                 printf((fst.st_mode & S_IWOTH) ? "w" : "-");
                 printf((fst.st_mode & S_IXOTH) ? "x" : "-");
-                printf("\t%lld", fst.st_size);
+                printf("\t%ld", fst.st_size);
                 // remove \n from ctime.
                 char *tstr = ctime(&fst.st_ctime);
                 if (tstr[strlen(tstr) - 1] == '\n')

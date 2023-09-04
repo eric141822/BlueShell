@@ -9,5 +9,6 @@ int shell_mkdir(char **argv);
 int shell_rmdir(char **argv);
 int shell_ls(char **argv);
 int shell_blue_shell(void);
+int shell_cd(char **argv);
 
 #endif /* CMDS.H */
