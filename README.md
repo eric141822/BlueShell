@@ -19,3 +19,5 @@ Custom shell written in C.
     - removes a directory.
 - ls
     - prints a list of files and folders in the specified path. Supports the -l flag.
+- cd
+    - change directory.
