@@ -152,7 +152,7 @@ void shell_loop(void)
         char cwd[1024];
         if (getcwd(cwd, sizeof(cwd)) != NULL)
         {
-            printf("%s", cwd);
+            printf("\033[36m%s\033[0m", cwd);
         }
         else
         {
