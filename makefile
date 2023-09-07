@@ -1,14 +1,18 @@
 CC=gcc
 CCFLAGS=-Wall -Wundef -Wshadow -Wpointer-arith -Wcast-align \
 	-pedantic -O3
-EXECUTABLES=blueshell \
 
-all: $(EXECUTABLES)
+EXECUTABLES=build \
+build/blueshell.out \
 
-blueshell: cmds.c blueshell.c
-	$(CC) $(CCFLAGS) $^ -o $@ 
+build/blueshell.out: src/cmds.c src/blueshell.c
+	$(CC) $(CCFLAGS) $^ -o $@
+
+build:
+	mkdir -p build
 
 .PHONY: clean all
 
 clean:
-	rm -f $(EXECUTABLES)
+	$(RM) -r build/*.out
+	rmdir build
