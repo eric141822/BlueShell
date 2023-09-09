@@ -5,6 +5,8 @@ CCFLAGS=-Wall -Wundef -Wshadow -Wpointer-arith -Wcast-align \
 EXECUTABLES=build \
 build/blueshell.out \
 
+all: $(EXECUTABLES)
+
 build/blueshell.out: src/cmds.c src/blueshell.c
 	$(CC) $(CCFLAGS) $^ -o $@
 
