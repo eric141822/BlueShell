@@ -111,6 +111,9 @@ int shell_exec(char **args)
         return shell_cd(args);
     }
 
+    // fork() to run a command.
+    // the general way to run a shell command, above "custom" implementations only done for 
+    // practive and study purposes.
     pid_t pid;
 
     pid = fork();
@@ -149,6 +152,7 @@ void shell_loop(void)
 
     while (status)
     {
+        // current working directory.
         char cwd[1024];
         if (getcwd(cwd, sizeof(cwd)) != NULL)
         {
