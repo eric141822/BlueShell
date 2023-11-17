@@ -7,7 +7,7 @@ Custom shell written in C.
 - help
     - prints the list of commands available.
 - exit
-    - quits the shell, same as `ctrl/cmd+c`.
+    - quits the shell, same as `ctrl+c`.
 - hello *arg*
     - prints a hello message to *arg*.
 - cflags *arg*
